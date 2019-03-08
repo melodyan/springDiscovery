@@ -1,14 +1,12 @@
-package yy20190307;
+package yy20190307.test;
 
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
+import yy20190307.MyTestBean;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-@SuppressWarnings("deprecation")
 public class BeanFactoryTest {
 
 

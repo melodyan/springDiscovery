@@ -4,5 +4,6 @@
 	   xsi:schemaLocation=" http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
+	<bean id="myTestBean1" class="yy20190307.MyTestBean"></bean>
 	<bean id="myTestBean" class="yy20190307.MyTestBean"></bean>
 </beans>

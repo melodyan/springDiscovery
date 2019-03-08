@@ -11,4 +11,11 @@ public class MyTestBean {
 	public void setTestStr(String testStr) {
 		this.testStr = testStr;
 	}
+
+	@Override
+	public String toString() {
+		return "MyTestBean{" +
+				"testStr='" + testStr + '\'' +
+				'}';
+	}
 }
