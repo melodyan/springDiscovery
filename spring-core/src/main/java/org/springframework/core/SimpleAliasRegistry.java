@@ -38,6 +38,10 @@ import org.springframework.util.StringValueResolver;
  * @author Juergen Hoeller
  * @since 2.5.2
  */
+
+/**
+ * 主要使用map作为alias缓存，对接口AliasRegistry进行具体实现
+ */
 public class SimpleAliasRegistry implements AliasRegistry {
 
 	/** Logger available to subclasses. */

@@ -633,18 +633,18 @@ public abstract class StringUtils {
 	 * @return the normalized path
 	 */
 	public static String cleanPath(String path) {
+		//如果路径为""或为null,则返回
 		if (!hasLength(path)) {
 			return path;
 		}
+		//将windows中的“\\”转换为“/”
 		String pathToUse = replace(path, WINDOWS_FOLDER_SEPARATOR, FOLDER_SEPARATOR);
 
-		// Strip prefix from path to analyze, to not treat it as part of the
-		// first path element. This is necessary to correctly parse paths like
-		// "file:core/../core/io/Resource.class", where the ".." should just
-		// strip the first "core" directory while keeping the "file:" prefix.
+		// Strip prefix from path to analyze, to not treat it as part of the first path element.
+		//  This is necessary to correctly parse paths like "file:core/../core/io/Resource.class", where the ".." should just strip the first "core" directory while keeping the "file:" prefix.
 		int prefixIndex = pathToUse.indexOf(':');
 		String prefix = "";
-		if (prefixIndex != -1) {
+		if (prefixIndex != -1) {//如果在路径中找到":'
 			prefix = pathToUse.substring(0, prefixIndex + 1);
 			if (prefix.contains(FOLDER_SEPARATOR)) {
 				prefix = "";
