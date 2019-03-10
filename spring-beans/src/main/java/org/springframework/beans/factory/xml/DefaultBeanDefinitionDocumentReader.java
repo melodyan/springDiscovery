@@ -195,16 +195,16 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	}
 
 	private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
-		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
+		if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {// 如果元素节点是<import>节点
 			importBeanDefinitionResource(ele);
 		}
-		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
+		else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) { // 如果元素节点是<alias>节点
 			processAliasRegistration(ele);
 		}
-		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
+		else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) { // 如果元素节点是<bean>节点
 			processBeanDefinition(ele, delegate);
 		}
-		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
+		else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {// 如果元素节点是<beans>节点
 			// recurse
 			doRegisterBeanDefinitions(ele);
 		}
@@ -310,12 +310,17 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 	 * Process the given bean element, parsing the bean definition
 	 * and registering it with the registry.
 	 */
+	// 解析Document元素中的<bean>节点并注册
 	protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
+		//  1.委托BeanDefinitionDelegate类的parseBeanDefinitionElement方法进行元素解析，返回BeanDefinitionHolder类型的实例bdHolder,
+		//  经过这个方法后，bdHolder实例已经包含我们配置文件中配置的各种属性了，例如class，name，id，alias之类的属性
 		BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
 		if (bdHolder != null) {
+			//2.bdHolder不为空的情况下若存在默认标签的子节点下再有自定义属性，还需要再次对自定义属性进行解析
 			bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
 			try {
 				// Register the final decorated instance.
+				//3.解析完成后，需要对解析后的bdHolder进行注册，注册委托给了BeanDefinitionReaderUtils的registerBeanDefinition方法
 				BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
 			}
 			catch (BeanDefinitionStoreException ex) {
@@ -323,6 +328,7 @@ public class DefaultBeanDefinitionDocumentReader implements BeanDefinitionDocume
 						bdHolder.getBeanName() + "'", ele, ex);
 			}
 			// Send registration event.
+			//发出响应事件，通知想关的监听器，这个bean已经加载完成了
 			getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
 		}
 	}
