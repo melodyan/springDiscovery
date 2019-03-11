@@ -56,7 +56,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 		Assert.hasText(name, "'name' must not be empty");
 		Assert.hasText(alias, "'alias' must not be empty");
 		synchronized (this.aliasMap) {
-			if (alias.equals(name)) {
+			if (alias.equals(name)) {//如果别名和beanName相同
 				this.aliasMap.remove(alias);
 				if (logger.isDebugEnabled()) {
 					logger.debug("Alias definition '" + alias + "' ignored since it points to same name");
@@ -67,8 +67,10 @@ public class SimpleAliasRegistry implements AliasRegistry {
 				if (registeredName != null) {
 					if (registeredName.equals(name)) {
 						// An existing alias - no need to re-register
+						//已存在的别名不需要再注册
 						return;
 					}
+					//如果别名不允许被覆盖，则抛出异常
 					if (!allowAliasOverriding()) {
 						throw new IllegalStateException("Cannot define alias '" + alias + "' for name '" +
 								name + "': It is already registered for name '" + registeredName + "'.");
@@ -78,6 +80,7 @@ public class SimpleAliasRegistry implements AliasRegistry {
 								registeredName + "' with new target name '" + name + "'");
 					}
 				}
+				//当A->B存在时，如果再出现A->C->B时则会抛出异常
 				checkForAliasCircle(name, alias);
 				this.aliasMap.put(alias, name);
 				if (logger.isTraceEnabled()) {

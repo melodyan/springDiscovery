@@ -883,6 +883,11 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
+				/**
+				 * 注册前的最后一次校验，这里的校验与之前XML校验不同
+				 * 主要是针对于AbstractBeanDefinition属性中的methodOverrides进行校验，
+				 * 校验methodOverrides是否与工厂方法并存或者methodOverrides对应的方法根本就不存在
+				 */
 				((AbstractBeanDefinition) beanDefinition).validate();
 			}
 			catch (BeanDefinitionValidationException ex) {
@@ -892,8 +897,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		}
 
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
+		//处理bean已经注册的情况
 		if (existingDefinition != null) {
 			if (!isAllowBeanDefinitionOverriding()) {
+				//如果对应的BeanName已经注册且在配置中配置了bean不允许被覆盖，则抛出异常
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
 			}
 			else if (existingDefinition.getRole() < beanDefinition.getRole()) {
@@ -921,6 +928,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			this.beanDefinitionMap.put(beanName, beanDefinition);
 		}
 		else {
+			//bean尚未注册
 			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
 				synchronized (this.beanDefinitionMap) {
@@ -945,7 +953,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			this.frozenBeanDefinitionNames = null;
 		}
 
+
 		if (existingDefinition != null || containsSingleton(beanName)) {
+			//重置所有bean对应的缓存
 			resetBeanDefinition(beanName);
 		}
 	}
